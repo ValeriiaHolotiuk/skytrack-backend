@@ -1,0 +1,34 @@
+services:
+  db:
+    image: mysql:8.0
+    container_name: skytrack-mysql
+    restart: always
+    environment:
+      MYSQL_DATABASE: skytrack
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_USER: skyuser
+      MYSQL_PASSWORD: skypass
+    ports:
+      - "3307:3306"   
+    volumes:
+      - skytrack_db_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-proot"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  api:
+    build: .
+    container_name: skytrack-api
+    restart: always
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+
+volumes:
+  skytrack_db_data:
