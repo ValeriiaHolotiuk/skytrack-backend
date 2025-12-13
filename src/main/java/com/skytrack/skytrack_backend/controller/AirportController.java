@@ -14,8 +14,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.skytrack.skytrack_backend.entity.Airport;
-import com.skytrack.skytrack_backend.repository.AirportRepository;
+import com.skytrack.skytrack_backend.dto.AirportRequest;
+import com.skytrack.skytrack_backend.dto.AirportResponse;
+import com.skytrack.skytrack_backend.service.AirportService;
 
 import jakarta.validation.Valid;
 
@@ -24,50 +25,37 @@ import jakarta.validation.Valid;
 @CrossOrigin(origins = "*")
 public class AirportController {
 
-    private final AirportRepository airportRepository;
+    private final AirportService airportService;
 
-    public AirportController(AirportRepository airportRepository) {
-        this.airportRepository = airportRepository;
+    public AirportController(AirportService airportService) {
+        this.airportService = airportService;
     }
 
     @GetMapping
-    public List<Airport> getAll() {
-        return airportRepository.findAll();
+    public ResponseEntity<List<AirportResponse>> getAll() {
+        return ResponseEntity.ok(airportService.getAll());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Airport> getById(@PathVariable Long id) {
-        return airportRepository.findById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+    public ResponseEntity<AirportResponse> getById(@PathVariable Long id) {
+        return ResponseEntity.ok(airportService.getById(id));
     }
 
     @PostMapping
-    public ResponseEntity<Airport> create(@Valid @RequestBody Airport airport) {
-        Airport saved = airportRepository.save(airport);
-        return ResponseEntity.created(URI.create("/api/airports/" + saved.getId())).body(saved);
+    public ResponseEntity<AirportResponse> create(@Valid @RequestBody AirportRequest request) {
+        AirportResponse created = airportService.create(request);
+        return ResponseEntity.created(URI.create("/api/airports/" + created.getId())).body(created);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Airport> update(@PathVariable Long id, @Valid @RequestBody Airport airport) {
-        return airportRepository.findById(id)
-                .map(existing -> {
-                    existing.setCode(airport.getCode());
-                    existing.setName(airport.getName());
-                    existing.setCity(airport.getCity());
-                    existing.setCountry(airport.getCountry());
-                    Airport saved = airportRepository.save(existing);
-                    return ResponseEntity.ok(saved);
-                })
-                .orElse(ResponseEntity.notFound().build());
+    public ResponseEntity<AirportResponse> update(@PathVariable Long id, @Valid @RequestBody AirportRequest request) {
+        return ResponseEntity.ok(airportService.update(id, request));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
-        if (!airportRepository.existsById(id)) {
-            return ResponseEntity.notFound().build();
-        }
-        airportRepository.deleteById(id);
+        airportService.delete(id);
         return ResponseEntity.noContent().build();
     }
 }
+
