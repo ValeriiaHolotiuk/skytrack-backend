@@ -10,6 +10,7 @@ import com.skytrack.skytrack_backend.dto.FlightResponse;
 import com.skytrack.skytrack_backend.entity.Airline;
 import com.skytrack.skytrack_backend.entity.Airport;
 import com.skytrack.skytrack_backend.entity.Flight;
+import com.skytrack.skytrack_backend.entity.FlightDirection;
 import com.skytrack.skytrack_backend.entity.FlightStatus;
 import com.skytrack.skytrack_backend.exception.ResourceNotFoundException;
 import com.skytrack.skytrack_backend.repository.AirlineRepository;
@@ -49,6 +50,20 @@ public class FlightService {
         return flightRepository.findByDestinationAirportId(airportId).stream().map(this::toResponse).toList();
     }
 
+ 
+    public List<FlightResponse> getByAirportAndDirection(Long airportId, FlightDirection direction) {
+        
+        airportRepository.findById(airportId)
+                .orElseThrow(() -> new ResourceNotFoundException("Airport not found with id: " + airportId));
+
+        List<Flight> flights = switch (direction) {
+            case ARRIVAL -> flightRepository.findByDestinationAirportId(airportId);
+            case DEPARTURE -> flightRepository.findByOriginAirportId(airportId);
+        };
+
+        return flights.stream().map(this::toResponse).toList();
+    }
+
     public FlightResponse create(FlightRequest req) {
         String flightNumber = req.getFlightNumber().trim().toUpperCase();
 
@@ -78,6 +93,7 @@ public class FlightService {
 
         Flight flight = new Flight();
         flight.setFlightNumber(flightNumber);
+        flight.setDirection(parseDirection(req.getDirection()));
         flight.setStatus(parseStatus(req.getStatus()));
         flight.setDepartureTime(dep);
         flight.setArrivalTime(arr);
@@ -117,6 +133,7 @@ public class FlightService {
         }
 
         flight.setFlightNumber(newNumber);
+        flight.setDirection(parseDirection(req.getDirection()));
         flight.setStatus(parseStatus(req.getStatus()));
         flight.setDepartureTime(dep);
         flight.setArrivalTime(arr);
@@ -137,14 +154,26 @@ public class FlightService {
         try {
             return FlightStatus.valueOf(raw.trim().toUpperCase());
         } catch (Exception e) {
-            throw new IllegalArgumentException("Invalid status. Use: SCHEDULED, BOARDING, DEPARTED, ARRIVED, DELAYED, CANCELLED");
+            throw new IllegalArgumentException(
+                    "Invalid status. Use: SCHEDULED, BOARDING, DEPARTED, ARRIVED, DELAYED, CANCELLED"
+            );
+        }
+    }
+
+    private FlightDirection parseDirection(String raw) {
+        try {
+            return FlightDirection.valueOf(raw.trim().toUpperCase());
+        } catch (Exception e) {
+            throw new IllegalArgumentException("Invalid direction. Use: ARRIVAL or DEPARTURE");
         }
     }
 
     private FlightResponse toResponse(Flight f) {
+   
         return new FlightResponse(
                 f.getId(),
                 f.getFlightNumber(),
+                f.getDirection().name(),
                 f.getStatus().name(),
                 f.getDepartureTime().toString(),
                 f.getArrivalTime().toString(),

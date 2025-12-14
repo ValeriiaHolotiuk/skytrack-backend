@@ -12,10 +12,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.skytrack.skytrack_backend.dto.FlightRequest;
 import com.skytrack.skytrack_backend.dto.FlightResponse;
+import com.skytrack.skytrack_backend.entity.FlightDirection;
 import com.skytrack.skytrack_backend.service.FlightService;
 
 import jakarta.validation.Valid;
@@ -40,6 +42,16 @@ public class FlightController {
     public ResponseEntity<FlightResponse> getById(@PathVariable Long id) {
         return ResponseEntity.ok(flightService.getById(id));
     }
+
+  
+    @GetMapping("/by-airport/{airportId}")
+    public ResponseEntity<List<FlightResponse>> getByAirportAndDirection(
+            @PathVariable Long airportId,
+            @RequestParam FlightDirection direction
+    ) {
+        return ResponseEntity.ok(flightService.getByAirportAndDirection(airportId, direction));
+    }
+
 
     @GetMapping("/origin/{airportId}")
     public ResponseEntity<List<FlightResponse>> getByOrigin(@PathVariable Long airportId) {

@@ -9,13 +9,16 @@ public class FlightRequest {
     private String flightNumber;
 
     @NotBlank
-    private String status; 
+    private String direction;   // ARRIVAL / DEPARTURE
 
     @NotBlank
-    private String departureTime; 
+    private String status;      // SCHEDULED, BOARDING, etc.
 
     @NotBlank
-    private String arrivalTime; 
+    private String departureTime; // ISO-8601 string
+
+    @NotBlank
+    private String arrivalTime;   // ISO-8601 string
 
     @NotNull
     private Long airlineId;
@@ -26,24 +29,69 @@ public class FlightRequest {
     @NotNull
     private Long destinationAirportId;
 
-    public String getFlightNumber() { return flightNumber; }
-    public void setFlightNumber(String flightNumber) { this.flightNumber = flightNumber; }
+    /* ===== Getters & Setters ===== */
 
-    public String getStatus() { return status; }
-    public void setStatus(String status) { this.status = status; }
+    public String getFlightNumber() {
+        return flightNumber;
+    }
 
-    public String getDepartureTime() { return departureTime; }
-    public void setDepartureTime(String departureTime) { this.departureTime = departureTime; }
+    public void setFlightNumber(String flightNumber) {
+        this.flightNumber = flightNumber;
+    }
 
-    public String getArrivalTime() { return arrivalTime; }
-    public void setArrivalTime(String arrivalTime) { this.arrivalTime = arrivalTime; }
+    public String getDirection() {
+        return direction;
+    }
 
-    public Long getAirlineId() { return airlineId; }
-    public void setAirlineId(Long airlineId) { this.airlineId = airlineId; }
+    public void setDirection(String direction) {
+        this.direction = direction;
+    }
 
-    public Long getOriginAirportId() { return originAirportId; }
-    public void setOriginAirportId(Long originAirportId) { this.originAirportId = originAirportId; }
+    public String getStatus() {
+        return status;
+    }
 
-    public Long getDestinationAirportId() { return destinationAirportId; }
-    public void setDestinationAirportId(Long destinationAirportId) { this.destinationAirportId = destinationAirportId; }
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public String getDepartureTime() {
+        return departureTime;
+    }
+
+    public void setDepartureTime(String departureTime) {
+        this.departureTime = departureTime;
+    }
+
+    public String getArrivalTime() {
+        return arrivalTime;
+    }
+
+    public void setArrivalTime(String arrivalTime) {
+        this.arrivalTime = arrivalTime;
+    }
+
+    public Long getAirlineId() {
+        return airlineId;
+    }
+
+    public void setAirlineId(Long airlineId) {
+        this.airlineId = airlineId;
+    }
+
+    public Long getOriginAirportId() {
+        return originAirportId;
+    }
+
+    public void setOriginAirportId(Long originAirportId) {
+        this.originAirportId = originAirportId;
+    }
+
+    public Long getDestinationAirportId() {
+        return destinationAirportId;
+    }
+
+    public void setDestinationAirportId(Long destinationAirportId) {
+        this.destinationAirportId = destinationAirportId;
+    }
 }

@@ -16,9 +16,12 @@ import jakarta.persistence.UniqueConstraint;
 import jakarta.validation.constraints.NotNull;
 
 @Entity
-@Table(name = "flights", uniqueConstraints = {
+@Table(
+    name = "flights",
+    uniqueConstraints = {
         @UniqueConstraint(name = "uk_flight_number", columnNames = "flight_number")
-})
+    }
+)
 public class Flight {
 
     @Id
@@ -28,6 +31,11 @@ public class Flight {
     @NotNull
     @Column(name = "flight_number", nullable = false, length = 20)
     private String flightNumber;
+
+    @NotNull
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, length = 20)
+    private FlightDirection direction;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 20)
@@ -41,7 +49,6 @@ public class Flight {
     @Column(name = "arrival_time", nullable = false)
     private LocalDateTime arrivalTime;
 
-
     @ManyToOne(optional = false)
     @JoinColumn(name = "airline_id", nullable = false)
     private Airline airline;
@@ -54,27 +61,73 @@ public class Flight {
     @JoinColumn(name = "destination_airport_id", nullable = false)
     private Airport destinationAirport;
 
-    // getters/setters
-    public Long getId() { return id; }
+    /* ===== Getters & Setters ===== */
 
-    public String getFlightNumber() { return flightNumber; }
-    public void setFlightNumber(String flightNumber) { this.flightNumber = flightNumber; }
+    public Long getId() {
+        return id;
+    }
 
-    public FlightStatus getStatus() { return status; }
-    public void setStatus(FlightStatus status) { this.status = status; }
+    public String getFlightNumber() {
+        return flightNumber;
+    }
 
-    public LocalDateTime getDepartureTime() { return departureTime; }
-    public void setDepartureTime(LocalDateTime departureTime) { this.departureTime = departureTime; }
+    public void setFlightNumber(String flightNumber) {
+        this.flightNumber = flightNumber;
+    }
 
-    public LocalDateTime getArrivalTime() { return arrivalTime; }
-    public void setArrivalTime(LocalDateTime arrivalTime) { this.arrivalTime = arrivalTime; }
+    public FlightDirection getDirection() {
+        return direction;
+    }
 
-    public Airline getAirline() { return airline; }
-    public void setAirline(Airline airline) { this.airline = airline; }
+    public void setDirection(FlightDirection direction) {
+        this.direction = direction;
+    }
 
-    public Airport getOriginAirport() { return originAirport; }
-    public void setOriginAirport(Airport originAirport) { this.originAirport = originAirport; }
+    public FlightStatus getStatus() {
+        return status;
+    }
 
-    public Airport getDestinationAirport() { return destinationAirport; }
-    public void setDestinationAirport(Airport destinationAirport) { this.destinationAirport = destinationAirport; }
+    public void setStatus(FlightStatus status) {
+        this.status = status;
+    }
+
+    public LocalDateTime getDepartureTime() {
+        return departureTime;
+    }
+
+    public void setDepartureTime(LocalDateTime departureTime) {
+        this.departureTime = departureTime;
+    }
+
+    public LocalDateTime getArrivalTime() {
+        return arrivalTime;
+    }
+
+    public void setArrivalTime(LocalDateTime arrivalTime) {
+        this.arrivalTime = arrivalTime;
+    }
+
+    public Airline getAirline() {
+        return airline;
+    }
+
+    public void setAirline(Airline airline) {
+        this.airline = airline;
+    }
+
+    public Airport getOriginAirport() {
+        return originAirport;
+    }
+
+    public void setOriginAirport(Airport originAirport) {
+        this.originAirport = originAirport;
+    }
+
+    public Airport getDestinationAirport() {
+        return destinationAirport;
+    }
+
+    public void setDestinationAirport(Airport destinationAirport) {
+        this.destinationAirport = destinationAirport;
+    }
 }
