@@ -86,6 +86,14 @@ This endpoint confirms that:
 -The API is accessible publicly
 
 ## Testing
+This project includes both unit tests and API (controller) tests to validate backend functionality.
+
+Examples of logic covered by unit tests:
+-Airline code normalization (trim and uppercase)
+-Validation of unique airline codes
+-Proper error handling when entities are not found
+-Business rule enforcement during create and update operations
+
 Tests cover key controllers such as:
 -Airport
 -Airline
