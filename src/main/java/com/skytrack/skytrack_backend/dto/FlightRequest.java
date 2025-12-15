@@ -9,16 +9,16 @@ public class FlightRequest {
     private String flightNumber;
 
     @NotBlank
-    private String direction;   // ARRIVAL / DEPARTURE
+    private String direction;   
 
     @NotBlank
-    private String status;      // SCHEDULED, BOARDING, etc.
+    private String status;      
 
     @NotBlank
-    private String departureTime; // ISO-8601 string
-
+    private String departureTime; 
+    
     @NotBlank
-    private String arrivalTime;   // ISO-8601 string
+    private String arrivalTime;   
 
     @NotNull
     private Long airlineId;
